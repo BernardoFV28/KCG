@@ -1,286 +1,303 @@
-/* --- Variáveis e Reset --- */
+/* --- ROOT & RESET --- */
 :root {
-    --primary-color: #d4af37; /* Dourado */
-    --dark-bg: #121212;
-    --darker-bg: #0a0a0a;
-    --text-color: #f4f4f4;
-    --text-muted: #a0a0a0;
-    --font-head: 'Oswald', sans-serif;
-    --font-body: 'Roboto', sans-serif;
+    --bg: #050505;
+    --surface: #0d0d0d;
+    --primary: #ff3e3e; /* Vermelho Alerta */
+    --primary-dim: #801f1f;
+    --text: #e0e0e0;
+    --text-dim: #666;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-display: 'Oswald', sans-serif;
+    --glitch-speed: 0.3s;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    cursor: crosshair; /* Cursor de precisão */
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: var(--dark-bg);
-    color: var(--text-color);
-    font-family: var(--font-body);
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
     line-height: 1.6;
     overflow-x: hidden;
 }
 
-a { text-decoration: none; color: inherit; transition: 0.3s; }
-ul { list-style: none; }
-
-/* --- Navbar --- */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 5%;
-    background: rgba(10, 10, 10, 0.95);
+/* --- EFEITOS DE TELA (SCANLINES) --- */
+.scanlines {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    z-index: 1000;
-    border-bottom: 1px solid #333;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(18, 16, 16, 0) 50%,
+        rgba(0, 0, 0, 0.25) 50%
+    );
+    background-size: 100% 4px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.15;
 }
 
-.logo {
-    font-family: var(--font-head);
-    font-size: 1.5rem;
-    font-weight: 700;
+/* --- NAVEGAÇÃO VERTICAL --- */
+.v-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 80px;
+    background: var(--surface);
+    border-right: 1px solid var(--primary-dim);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 0;
+    z-index: 100;
+}
+
+.v-logo {
+    font-family: var(--font-display);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 1.2rem;
     letter-spacing: 2px;
 }
 
-.logo span { color: var(--primary-color); }
+.v-logo span { color: var(--primary); }
 
-.nav-links { display: flex; gap: 30px; align-items: center; }
-.nav-links a:hover { color: var(--primary-color); }
-
-.btn-highlight {
-    border: 1px solid var(--primary-color);
-    padding: 8px 20px;
-    border-radius: 4px;
-    color: var(--primary-color);
+.v-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.btn-highlight:hover { background: var(--primary-color); color: #000; }
+.v-menu a {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
 
-.menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; }
+.v-menu a:hover, .v-menu a.v-active {
+    color: var(--primary);
+    text-shadow: 0 0 8px var(--primary);
+}
 
-/* --- Hero Section --- */
-.hero {
+/* --- HERO SECTION --- */
+.v-hero {
     height: 100vh;
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
-                url('carlson.png');
-    background-size: cover;
-    background-position: center;
+    margin-left: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
     position: relative;
-    
-    
-}
-.hero-content h3 {
-    font-family: var(--font-head);
-    color: var(--primary-color);
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
+    padding: 2rem;
 }
 
-.hero-content h1 {
-    font-family: var(--font-head);
-    font-size: 5rem;
-    line-height: 1;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-}
-
-.hero-btns { margin-top: 30px; display: flex; gap: 20px; justify-content: center; }
-
-.btn {
-    padding: 12px 30px;
-    font-weight: bold;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.btn-primary { background: var(--primary-color); color: #000; border: none; }
-.btn-primary:hover { background: #b5952f; }
-
-.btn-outline { border: 2px solid #fff; color: #fff; }
-.btn-outline:hover { background: #fff; color: #000; }
-
-.scroll-down {
-    position: absolute;
-    bottom: 30px;
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-    40% {transform: translateY(-10px);}
-    60% {transform: translateY(-5px);}
-}
-
-/* --- Layout Geral --- */
-.section { padding: 80px 10%; }
-.dark-bg { background-color: var(--darker-bg); }
-.container { max-width: 1200px; margin: 0 auto; }
-.section-title {
-    font-family: var(--font-head);
-    font-size: 2.5rem;
-    text-align: center;
-    margin-bottom: 50px;
-    text-transform: uppercase;
-}
-
-/* --- Sobre --- */
-.split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    align-items: center;
-}
-
-.about-img img {
+.v-frame {
+    border: 1px solid var(--primary-dim);
+    padding: 4rem;
+    position: relative;
+    max-width: 900px;
     width: 100%;
-    border-radius: 8px;
-    box-shadow: -10px 10px 0px var(--primary-color);
+    background: rgba(13, 13, 13, 0.8);
+    backdrop-filter: blur(5px);
 }
 
-.stats { display: flex; gap: 40px; margin-top: 30px; }
-.stat-item h3 { font-size: 2rem; color: var(--primary-color); font-family: var(--font-head); }
-.stat-item p { color: var(--text-muted); font-size: 0.9rem; }
-
-/* --- Cards Conquistas --- */
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
+.v-status {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: var(--bg);
+    padding: 0 10px;
+    font-size: 0.7rem;
+    color: var(--primary);
 }
 
-.card {
-    background: #1e1e1e;
-    padding: 30px;
-    border-radius: 8px;
-    text-align: center;
-    border: 1px solid #333;
-    transition: transform 0.3s;
+.v-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
 }
 
-.card:hover { transform: translateY(-10px); border-color: var(--primary-color); }
-.card i { font-size: 3rem; margin-bottom: 20px; }
-.gold { color: #FFD700; }
-.silver { color: #C0C0C0; }
+.v-title span {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--text);
+}
 
-/* --- Galeria --- */
-.gallery-grid {
+.v-typewriter {
+    color: var(--primary);
+    border-right: 2px solid var(--primary);
+    width: fit-content;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
+}
+
+/* --- DATA GRID & CARDS --- */
+.v-section {
+    margin-left: 80px;
+    padding: 5rem 2rem;
+    max-width: 1200px;
+}
+
+.v-header h2 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--primary-dim);
+}
+
+.v-num { color: var(--primary); margin-right: 10px; }
+
+.v-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
-.gallery-item img {
-    width: 100%;
-    height: 500px;
-    object-fit: cover;
-    border-radius: 4px;
-    filter: grayscale(100%);
-    transition: 0.4s;
-}
-
-.gallery-item img:hover { filter: grayscale(0%); transform: scale(1.02); }
-
-/* --- Footer --- */
-.footer-section { text-align: center; border-top: 1px solid #333; }
-.social-links { margin-top: 30px; font-size: 1.5rem; display: flex; justify-content: center; gap: 20px; }
-.social-links a:hover { color: var(--primary-color); }
-
-/* --- Animações (JavaScript Trigger) --- */
-.hidden { opacity: 0; transform: translateY(50px); transition: all 1s ease; }
-.show { opacity: 1; transform: translateY(0); }
-
-/* --- Responsividade --- */
-@media (max-width: 768px) {
-    .nav-links {
-        position: absolute;
-        right: 0px;
-        height: 92vh;
-        top: 8vh;
-        background-color: var(--darker-bg);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 50%;
-        transform: translateX(100%);
-        transition: transform 0.5s ease-in;
-    }
-    .nav-links.nav-active { transform: translateX(0%); }
-    .menu-toggle { display: block; }
-    .hero-content h1 { font-size: 3rem; }
-    .split { grid-template-columns: 1fr; }
-}
-.sponsor-grid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
-    flex-wrap: wrap;
-    margin-top: 30px;
-}
-
-.sponsor-grid img {
-    height: 60px;
-    filter: grayscale(100%); /* Deixa preto e branco */
-    opacity: 0.6;
+.v-card {
+    background: var(--surface);
+    padding: 2rem;
+    border-left: 4px solid var(--primary-dim);
     transition: 0.3s;
 }
 
-.sponsor-grid img:hover {
-    filter: grayscale(0%); /* Fica colorido ao passar o mouse */
-    opacity: 1;
-}
-.next-fight {
-    background: #000;
-    padding: 40px 0;
-    text-align: center;
-    border-top: 2px solid var(--primary-color);
-    border-bottom: 2px solid var(--primary-color);
+.v-card:hover {
+    border-left-color: var(--primary);
+    background: #151515;
+    transform: translateX(10px);
 }
 
-.next-fight h2 {
-    font-family: 'Oswald', sans-serif;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
+.v-value {
+    font-size: 3rem;
+    font-weight: 700;
+    font-family: var(--font-display);
 }
 
-.next-fight h2 span {
-    color: var(--primary-color);
+.v-value small { font-size: 1rem; color: var(--text-dim); margin-left: 5px; }
+
+.v-bar {
+    height: 4px;
+    background: #222;
+    margin-top: 1rem;
 }
 
-.timer-grid {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+.v-progress {
+    height: 100%;
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
 }
 
-.timer-box {
-    background: #1a1a1a;
-    padding: 15px;
-    min-width: 80px;
-    border-radius: 4px;
-    border: 1px solid #333;
+/* --- TIMELINE --- */
+.v-timeline {
+    border-left: 1px dashed var(--text-dim);
+    margin-left: 10px;
 }
 
-.timer-box span {
-    display: block;
-    font-size: 2.5rem;
+.v-log-entry {
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 3rem;
+}
+
+.v-log-entry::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    background: var(--primary);
+}
+
+.v-date { color: var(--primary); font-weight: bold; font-size: 0.9rem; }
+
+/* --- GALLERY --- */
+.v-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.v-img-frame {
+    aspect-ratio: 1;
+    overflow: hidden;
+    filter: grayscale(1) contrast(1.2);
+    border: 1px solid var(--text-dim);
+    transition: 0.5s;
+}
+
+.v-img-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.v-img-frame:hover {
+    filter: grayscale(0);
+    border-color: var(--primary);
+    transform: scale(0.98);
+}
+
+/* --- ANIMATIONS --- */
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: var(--primary) }
+}
+
+.blink { animation: blink-dot 1s infinite; }
+@keyframes blink-dot {
+    50% { opacity: 0; }
+}
+
+/* --- MOBILE --- */
+@media (max-width: 768px) {
+    .v-nav {
+        width: 100%;
+        height: 60px;
+        flex-direction: row;
+        padding: 0 1rem;
+    }
+    .v-logo { writing-mode: horizontal-tb; transform: none; }
+    .v-menu { display: none; } /* Ideal implementar menu hambúrguer */
+    .v-hero, .v-section { margin-left: 0; padding-top: 80px; }
+    .v-frame { padding: 2rem; }
+}
+
+.v-btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
     font-weight: bold;
-    color: var(--primary-color);
-    font-family: 'Oswald', sans-serif;
+    margin-top: 2rem;
+    clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+    transition: 0.3s;
 }
 
-.timer-box label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    color: #888;
+.v-btn:hover {
+    background: white;
+    color: var(--primary);
+    transform: translateY(-5px);
 }
