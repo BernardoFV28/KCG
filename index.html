@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KURIRIN // TACTICAL BJJ OS</title>
+    <title>KURIRIN // BERNARDO FERNANDES</title>
     
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -44,12 +44,15 @@
             <div class="v-header">
                 <h2><span class="v-num">01.</span> PERFORMACE</h2>
             </div>
-            <div class="v-grid">
-                <div class="v-card data-point">
-                    <label>COMBAT_TIME</label>
-                    <div class="v-value">385<small>DAYS</small></div>
-                    <div class="v-bar"><div class="v-progress" style="width: 85%;"></div></div>
-                </div>
+<div class="v-card data-point">
+    <label>COMBAT_TIME</label>
+    <div class="v-value">
+        <span id="contador-dias">395</span><small>DAYS</small>
+    </div>
+    <div class="v-bar">
+        <div class="v-progress" style="width: 85%;"></div>
+    </div>
+</div>
                 <div class="v-card data-point">
                     <label>CARLSON GRACIE CAMP. INTERNO</label>
                     <div class="v-value">TOP_1</div>
@@ -116,6 +119,18 @@
             </div>
         </section>
     </main>
+    <script>
+    // Defina a data de início (Ano, Mês, Dia) - Formato: 'YYYY-MM-DD'
+    const dataInicio = new Date('2025-04-10'); 
+    const dataAtual = new Date();
+
+    // Calcula a diferença em milissegundos e converte para dias
+    const diferencaTempo = Math.abs(dataAtual - dataInicio);
+    const diasPassados = Math.ceil(diferencaTempo / (1000 * 60 * 60 * 24));
+
+    // Atualiza o HTML com o número de dias reais
+    document.getElementById('contador-dias').innerText = diasPassados;
+</script>
 
     <footer>
         <div class="v-footer-info">
