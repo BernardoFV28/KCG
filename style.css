@@ -205,8 +205,8 @@ body {
 
 /* --- TIMELINE --- */
 .v-timeline {
-    border-left: 1px dashed var(--text-dim);
-    margin-left: 10px;
+    border-left: 2px dashed var(--text-dim);
+    margin-left: 15px;
 }
 
 .v-log-entry {
