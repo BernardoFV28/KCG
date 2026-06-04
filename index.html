@@ -1,107 +1,631 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BERNARDO FERNANDES</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BERNARDO FERNANDES</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --primary:#ff2a2a;
+  --primary-dim:rgba(255,42,42,0.15);
+  --primary-glow:rgba(255,42,42,0.4);
+  --bg:#070707;
+  --bg2:#0f0f0f;
+  --bg3:#141414;
+  --text:#f0f0f0;
+  --muted:#777;
+  --border:#1e1e1e;
+  --border2:#2a2a2a;
+  --green:#00ff88;
+  --cyan:#00d4ff;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+
+/* ── SCANLINES ── */
+.scanlines{
+  position:fixed;width:100%;height:100%;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,0.012),rgba(255,255,255,0.012) 1px,transparent 1px,transparent 3px);
+}
+
+/* ── GRID BG ── */
+.grid-bg{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,42,42,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,42,42,0.03) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+/* ── PARTICLES ── */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:1;}
+
+/* ── LOADER ── */
+#loader{
+  position:fixed;width:100%;height:100%;background:#000;z-index:999999;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  animation:fadeLoader 3.5s forwards;
+}
+.loader-logo{
+  font-size:2.8rem;color:var(--primary);font-family:'Oswald',sans-serif;
+  letter-spacing:4px;margin-bottom:10px;
+}
+.loader-sub{color:#444;font-size:.75rem;letter-spacing:3px;margin-bottom:40px;}
+.loader-bar{width:320px;height:2px;background:#1a1a1a;overflow:hidden;position:relative;}
+.loader-progress{width:0%;height:100%;background:var(--primary);animation:loadBar 3s forwards;box-shadow:0 0 10px var(--primary);}
+.loader-text{margin-top:20px;color:#555;font-size:.7rem;letter-spacing:2px;}
+.loader-pct{color:var(--primary);margin-top:8px;font-size:.9rem;}
+
+@keyframes loadBar{to{width:100%;}}
+@keyframes fadeLoader{0%,80%{opacity:1;visibility:visible;}100%{opacity:0;visibility:hidden;}}
+
+/* ── NAV ── */
+.v-nav{
+  position:fixed;width:100%;top:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 8%;
+  background:rgba(7,7,7,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.v-logo{font-family:'Oswald',sans-serif;font-size:1.4rem;letter-spacing:3px;}
+.v-logo span{color:var(--primary);}
+.v-menu{display:flex;gap:30px;align-items:center;}
+.v-menu a{color:#666;font-size:.75rem;letter-spacing:2px;transition:.3s;position:relative;}
+.v-menu a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--primary);transition:.3s;}
+.v-menu a:hover{color:var(--primary);}
+.v-menu a:hover::after{width:100%;}
+.nav-cta{background:var(--primary)!important;color:#fff!important;padding:8px 18px;}
+.nav-cta:hover{box-shadow:0 0 20px var(--primary-glow);}
+.mobile-menu-btn{display:none;background:none;border:1px solid #333;color:#fff;padding:8px 12px;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+
+/* ── HERO ── */
+.v-hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;position:relative;padding:120px 20px;
+  background:linear-gradient(rgba(0,0,0,.88),rgba(0,0,0,.94)),url('carlson.png');
+  background-size:cover;background-position:center;
+}
+.hero-inner{position:relative;z-index:2;}
+.v-status{color:var(--primary);margin-bottom:25px;font-size:.8rem;letter-spacing:3px;}
+.blink{animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:0;}}
+.v-title{
+  font-family:'Oswald',sans-serif;font-size:6.5rem;line-height:.9;
+  text-transform:uppercase;letter-spacing:2px;
+}
+.v-title span{color:var(--primary);text-shadow:0 0 30px var(--primary-glow);}
+.hero-sub{margin-top:20px;color:#555;font-size:.85rem;letter-spacing:4px;}
+.hero-taglines{margin-top:35px;}
+.hero-taglines .line{
+  font-family:'Oswald',sans-serif;font-size:1.6rem;color:#333;
+  margin:6px 0;transition:.3s;
+}
+.hero-taglines .line.active{color:var(--text);}
+.hero-taglines .line.primary{color:var(--primary);text-shadow:0 0 20px var(--primary-glow);}
+
+.terminal-box{
+  margin:40px auto;max-width:480px;background:#0a0a0a;
+  border:1px solid #1e1e1e;padding:20px;text-align:left;
+  box-shadow:0 0 30px rgba(255,42,42,0.08);
+}
+.terminal-prompt{color:var(--primary);margin-bottom:8px;font-size:.8rem;}
+.terminal-output{color:#aaa;font-size:.85rem;min-height:24px;}
+.terminal-cursor{display:inline-block;width:8px;height:15px;background:var(--primary);animation:blink 1s infinite;vertical-align:middle;}
+
+.v-actions{margin-top:40px;display:flex;gap:15px;justify-content:center;flex-wrap:wrap;}
+.v-btn{
+  background:var(--primary);color:#fff;padding:14px 32px;
+  display:inline-block;font-weight:700;font-family:'JetBrains Mono',monospace;
+  font-size:.8rem;letter-spacing:2px;transition:.3s;border:none;cursor:pointer;
+}
+.v-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px var(--primary-glow);}
+.secondary-btn{background:transparent;border:1px solid #333;color:#999;}
+.secondary-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-dim);box-shadow:none;}
+.v-coordinates{position:absolute;bottom:30px;color:#333;font-size:.7rem;letter-spacing:2px;}
+
+/* ── SECTION ── */
+.v-section{padding:100px 8%;position:relative;z-index:2;}
+.v-section.alt-bg{background:var(--bg2);}
+.v-header{margin-bottom:60px;}
+.v-header h2{font-size:2.8rem;font-family:'Oswald',sans-serif;letter-spacing:2px;}
+.v-num{color:var(--primary);}
+.v-header p{color:#555;margin-top:10px;font-size:.8rem;letter-spacing:2px;}
+.section-line{width:60px;height:2px;background:var(--primary);margin-top:15px;box-shadow:0 0 10px var(--primary-glow);}
+
+/* ── ABOUT ── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+.about-text p{color:#999;line-height:2;margin-bottom:20px;font-size:.85rem;}
+.about-text p strong{color:var(--primary);}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.stat-item{background:var(--bg3);border:1px solid var(--border2);padding:25px;transition:.3s;}
+.stat-item:hover{border-color:var(--primary);transform:translateY(-3px);}
+.stat-num{font-size:2.5rem;font-family:'Oswald',sans-serif;color:var(--primary);}
+.stat-label{color:#555;font-size:.7rem;letter-spacing:2px;margin-top:5px;}
+.mini-quote{margin-top:30px;border-left:3px solid var(--primary);padding:15px 20px;background:var(--bg3);color:#666;font-style:italic;font-size:.8rem;}
+
+/* ── TIMELINE ── */
+.dev-log{position:relative;}
+.timeline-line{position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--primary),transparent);}
+.log-entry{
+  padding-left:40px;margin-bottom:50px;position:relative;
+  opacity:0;transform:translateX(-20px);transition:.8s;
+}
+.log-entry.visible{opacity:1;transform:translateX(0);}
+.log-dot{
+  position:absolute;left:-5px;top:5px;width:12px;height:12px;
+  background:var(--primary);box-shadow:0 0 15px var(--primary-glow);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 15px var(--primary-glow);}50%{box-shadow:0 0 30px var(--primary-glow),0 0 5px #fff;}}
+.log-year{color:var(--primary);font-size:.75rem;letter-spacing:3px;margin-bottom:8px;}
+.log-entry h3{font-family:'Oswald',sans-serif;font-size:1.4rem;margin-bottom:8px;}
+.log-entry p{color:#666;font-size:.8rem;line-height:1.8;}
+.log-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.tag{background:var(--primary-dim);color:var(--primary);padding:3px 10px;font-size:.65rem;letter-spacing:1px;border:1px solid rgba(255,42,42,0.2);}
+
+/* ── WEB DEV SKILLS ── */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.skill-card{
+  background:var(--bg2);border:1px solid var(--border2);padding:28px;
+  transition:.4s;position:relative;overflow:hidden;
+}
+.skill-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--primary),transparent);
+  transform:translateX(-100%);transition:.6s;
+}
+.skill-card:hover::before{transform:translateX(0);}
+.skill-card:hover{transform:translateY(-5px);border-color:var(--primary);box-shadow:0 10px 30px rgba(255,42,42,0.1);}
+.skill-icon{font-size:2rem;margin-bottom:15px;}
+.skill-name{font-family:'Oswald',sans-serif;font-size:1.2rem;margin-bottom:8px;}
+.skill-desc{color:#555;font-size:.75rem;line-height:1.6;margin-bottom:15px;}
+.skill-bar-wrap{background:#0a0a0a;height:4px;overflow:hidden;margin-top:12px;}
+.skill-bar{height:100%;background:var(--primary);width:0;transition:width 1.5s ease;box-shadow:0 0 8px var(--primary-glow);}
+.skill-pct{color:var(--primary);font-size:.7rem;margin-top:6px;}
+
+/* ── GAME DEV ── */
+.game-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.game-card{
+  background:var(--bg3);border:1px solid var(--border);padding:28px;
+  transition:.4s;position:relative;overflow:hidden;cursor:default;
+}
+.game-card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 50%,rgba(255,42,42,0.05) 0%,transparent 70%);
+  opacity:0;transition:.4s;
+}
+.game-card:hover::after{opacity:1;}
+.game-card:hover{border-color:var(--primary);transform:translateY(-6px);box-shadow:0 15px 40px rgba(255,42,42,0.12);}
+.game-icon{
+  width:50px;height:50px;background:var(--primary-dim);border:1px solid rgba(255,42,42,0.3);
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:18px;
+}
+.game-card h3{font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:1px;margin-bottom:8px;}
+.game-card p{color:#555;font-size:.72rem;line-height:1.7;}
+.game-status{
+  margin-top:15px;display:inline-block;padding:3px 10px;font-size:.6rem;
+  letter-spacing:2px;border:1px solid #333;color:#555;
+}
+.game-status.active{border-color:var(--green);color:var(--green);}
+.game-status.studying{border-color:var(--cyan);color:var(--cyan);}
+
+/* ── PROJECTS ── */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:25px;}
+.project-card{
+  background:var(--bg2);border:1px solid var(--border2);
+  overflow:hidden;transition:.4s;
+}
+.project-card:hover{border-color:var(--primary);box-shadow:0 0 40px rgba(255,42,42,0.08);}
+.project-header{
+  background:linear-gradient(135deg,#0d0d0d,#111);
+  padding:30px;border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;gap:15px;
+}
+.project-num{
+  font-family:'Oswald',sans-serif;font-size:3rem;color:#1a1a1a;font-weight:700;
+  line-height:1;
+}
+.project-info h3{font-family:'Oswald',sans-serif;font-size:1.3rem;letter-spacing:1px;}
+.project-info .type{color:var(--primary);font-size:.7rem;letter-spacing:2px;margin-top:4px;}
+.project-body{padding:25px;}
+.project-body p{color:#666;font-size:.8rem;line-height:1.8;margin-bottom:18px;}
+.tech-stack{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.tech-badge{background:#0a0a0a;border:1px solid #222;padding:4px 10px;font-size:.65rem;color:#888;letter-spacing:1px;}
+.project-footer{
+  padding:20px 25px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.status-badge{font-size:.65rem;letter-spacing:2px;}
+.status-wip{color:var(--cyan);}
+.status-live{color:var(--green);}
+.status-concept{color:#888;}
+.project-link{
+  background:none;border:1px solid var(--primary);color:var(--primary);
+  padding:8px 16px;font-size:.65rem;letter-spacing:2px;cursor:pointer;
+  transition:.3s;font-family:'JetBrains Mono',monospace;
+}
+.project-link:hover{background:var(--primary);color:#fff;}
+
+/* ── SKILLS MATRIX ── */
+.matrix-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px;}
+.matrix-card{background:var(--bg3);border:1px solid var(--border2);padding:30px;transition:.4s;}
+.matrix-card:hover{border-color:var(--primary);}
+.matrix-title{
+  font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:2px;
+  color:var(--primary);margin-bottom:20px;padding-bottom:12px;
+  border-bottom:1px solid var(--border2);
+}
+.matrix-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.matrix-item span{color:#888;font-size:.75rem;}
+.matrix-dots{display:flex;gap:4px;}
+.dot{width:10px;height:10px;background:#1a1a1a;border:1px solid #2a2a2a;transition:.3s;}
+.dot.filled{background:var(--primary);border-color:var(--primary);box-shadow:0 0 6px var(--primary-glow);}
+
+/* ── PHILOSOPHY ── */
+.philosophy-section{
+  text-align:center;
+  background:radial-gradient(ellipse at center,rgba(255,42,42,0.04) 0%,transparent 70%),var(--bg2);
+}
+.terminal-block{
+  max-width:700px;margin:0 auto;background:#050505;
+  border:1px solid #1a1a1a;overflow:hidden;
+  box-shadow:0 0 60px rgba(255,42,42,0.1);
+}
+.terminal-header{
+  background:#111;padding:12px 20px;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid #1a1a1a;
+}
+.t-dot{width:12px;height:12px;border-radius:50%;}
+.t-red{background:#ff5f57;}
+.t-yellow{background:#ffbd2e;}
+.t-green{background:#28ca41;}
+.t-title{color:#444;font-size:.7rem;margin-left:10px;letter-spacing:1px;}
+.terminal-content{padding:40px;text-align:left;}
+.t-line{margin-bottom:15px;font-size:.85rem;line-height:2;}
+.t-line .prompt{color:var(--primary);}
+.t-line .cmd{color:#aaa;}
+.t-line .output{color:#666;}
+.t-line .highlight{color:var(--text);}
+
+/* ── CONTACT ── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start;}
+.contact-info p{color:#666;font-size:.85rem;line-height:2;margin-bottom:30px;}
+.contact-links{display:flex;flex-direction:column;gap:12px;}
+.contact-link{
+  display:flex;align-items:center;gap:15px;padding:16px 20px;
+  background:var(--bg3);border:1px solid var(--border2);transition:.3s;
+}
+.contact-link:hover{border-color:var(--primary);transform:translateX(5px);}
+.cl-icon{color:var(--primary);font-size:1.2rem;width:24px;}
+.cl-label{color:#888;font-size:.7rem;letter-spacing:1px;}
+.cl-value{color:var(--text);font-size:.8rem;}
+.contact-cta{background:var(--bg3);border:1px solid var(--border2);padding:40px;}
+.contact-cta h3{font-family:'Oswald',sans-serif;font-size:1.8rem;margin-bottom:15px;}
+.contact-cta p{color:#666;font-size:.8rem;line-height:1.8;margin-bottom:30px;}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);padding:30px 8%;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+  color:#333;font-size:.7rem;letter-spacing:1px;
+}
+.footer-logo{font-family:'Oswald',sans-serif;color:#444;letter-spacing:3px;}
+.footer-logo span{color:var(--primary);}
+
+/* ── SCROLL ANIMATIONS ── */
+.hidden-scroll{opacity:0;transform:translateY(40px);transition:.8s;}
+.show-scroll{opacity:1;transform:translateY(0);}
+
+/* ── MUSIC BTN ── */
+#musicToggle{
+  position:fixed;right:20px;bottom:20px;z-index:998;
+  background:rgba(10,10,10,0.9);color:#fff;border:1px solid #333;
+  padding:10px 16px;cursor:pointer;font-weight:700;font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:1px;transition:.3s;
+}
+#musicToggle:hover{border-color:var(--primary);color:var(--primary);}
+
+/* ── SCROLL TO TOP ── */
+#scrollTop{
+  position:fixed;right:20px;bottom:65px;z-index:997;
+  background:rgba(10,10,10,0.9);color:#555;border:1px solid #222;
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.3s;font-size:1rem;opacity:0;
+}
+#scrollTop.visible{opacity:1;}
+#scrollTop:hover{border-color:var(--primary);color:var(--primary);}
+.v-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.v-img-frame {
+    aspect-ratio: 1;
+    overflow: hidden;
+    filter: grayscale(1) contrast(1.2);
+    border: 1px solid var(--text-dim);
+    transition: 0.5s;
+}
+
+.v-img-frame img {
+    width: 100%;
+    height: 120%;
+    object-fit: cover;
+}
+
+.v-img-frame:hover {
+    filter: grayscale(0);
+    border-color: var(--primary);
+    transform: scale(0.98);
+}
+
+/* --- ANIMATIONS --- */
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: var(--primary) }
+}
+
+.blink { animation: blink-dot 1s infinite; }
+@keyframes blink-dot {
+    50% { opacity: 0; }
+}
+
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .about-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .v-menu{display:none;}
+  .mobile-menu-btn{display:block;}
+  .v-nav{padding:16px 5%;}
+  .v-title{font-size:3.8rem;}
+  .v-section{padding:70px 5%;}
+  .v-header h2{font-size:2rem;}
+  .projects-grid{grid-template-columns:1fr;}
+  .about-stats{grid-template-columns:1fr 1fr;}
+  footer{flex-direction:column;text-align:center;}
+}
+@media(max-width:480px){
+  .v-title{font-size:2.8rem;}
+  .hero-taglines .line{font-size:1.1rem;}
+  .about-stats{grid-template-columns:1fr;}
+}
+
+/* Mobile Nav */
+.mobile-nav{
+  display:none;position:fixed;top:61px;left:0;right:0;
+  background:rgba(7,7,7,0.98);border-bottom:1px solid var(--border);
+  padding:20px;z-index:99;flex-direction:column;gap:15px;
+}
+.mobile-nav.open{display:flex;}
+.mobile-nav a{color:#666;padding:10px;border-bottom:1px solid var(--border);font-size:.8rem;letter-spacing:2px;}
+.mobile-nav a:hover{color:var(--primary);}
+
+/* ── BJJ SECTION ── */
+.bjj-layout{display:grid;grid-template-columns:1fr 2fr;gap:50px;align-items:start;}
+.bjj-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
+.bjj-stat-card{background:var(--bg2);border:1px solid var(--border2);padding:28px;transition:.4s;}
+.bjj-stat-card:hover{border-color:var(--primary);transform:translateY(-4px);}
+.bjj-stat-card label{color:#555;font-size:.7rem;letter-spacing:2px;display:block;margin-bottom:14px;}
+.bjj-wide{grid-column:span 2;}
+.bjj-modality{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);}
+.bjj-modality:last-child{border-bottom:none;}
+.bjj-mod-icon{font-size:1.4rem;width:30px;text-align:center;}
+.routine-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.routine-day{text-align:center;flex:1;min-width:32px;}
+.routine-day span{font-size:.6rem;color:#444;display:block;margin-bottom:6px;letter-spacing:1px;}
+.r-active{height:28px;background:var(--primary);box-shadow:0 0 8px var(--primary-glow);}
+.r-rest{height:28px;background:#111;border:1px solid #1a1a1a;}
+@media(max-width:1024px){.bjj-layout{grid-template-columns:1fr;}}
+@media(max-width:600px){.bjj-wide{grid-column:span 1;}}
+
+</style>
 </head>
-<body class="terminal-theme">
+<body>
 
-    <div class="scanlines"></div>
+<!-- PARTICLES -->
+<canvas id="particles"></canvas>
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
 
-    <nav class="v-nav">
-        <div class="v-logo">B.FERNANDES<span>v2.0</span></div>
-        <div class="v-menu">
-            <a href="#about">//SOBRE</a>
-            <a href="#stats">//DATA</a>
-            <a href="#log">//LOGS</a>
-            <a href="#contact" class="v-active">//CONTATE-ME</a>
+<!-- LOADER -->
+<div id="loader">
+  <h1 class="loader-logo">B.FERNANDES</h1>
+  <p class="loader-sub">kuririn</p>
+  <div class="loader-bar"><div class="loader-progress"></div></div>
+  <p class="loader-text">INITIALIZING DEV ENVIRONMENT...</p>
+  <p class="loader-pct" id="loaderPct">0%</p>
+</div>
+
+<!-- MUSIC -->
+<button id="musicToggle">🔊 BGM</button>
+<audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
+
+<!-- SCROLL TOP -->
+<div id="scrollTop">↑</div>
+
+<!-- NAV -->
+<nav class="v-nav">
+  <div class="v-logo">B.FERNANDES<span></span></div>
+  <div class="v-menu">
+    <a href="#about">ABOUT</a>
+    <a href="#devlog">DEV_LOG</a>
+    <a href="#webdev">WEB</a>
+    <a href="#gamedev">GAMES</a>
+    <a href="#projects">PROJECTS</a>
+    <a href="#bjj">BJJ</a>
+    <a href="#contact" class="nav-cta">CONTACT</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobile()">☰ MENU</button>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#about" onclick="toggleMobile()">ABOUT</a>
+  <a href="#devlog" onclick="toggleMobile()">DEV_LOG</a>
+  <a href="#webdev" onclick="toggleMobile()">WEB DEV</a>
+  <a href="#gamedev" onclick="toggleMobile()">GAME DEV</a>
+  <a href="#projects" onclick="toggleMobile()">PROJECTS</a>
+  <a href="#bjj" onclick="toggleMobile()">BJJ</a>
+  <a href="#contact" onclick="toggleMobile()">CONTACT</a>
+</div>
+
+<!-- HERO -->
+<header class="v-hero">
+  <div class="hero-inner">
+    <div class="v-status">
+      <span class="blink">●</span>
+      ONLINE // WEB DEV + GAME DEV
+    </div>
+    <h1 class="v-title">
+      BERNARDO<br><span>FERNANDES</span>
+    </h1>
+    <p class="hero-sub">JUIZ DE FORA // BRAZIL</p>
+
+    <div class="hero-taglines">
+      <div class="line active">Building Websites.</div>
+      <div class="line active" style="transition-delay:.2s">Creating Games.</div>
+      <div class="line primary" style="transition-delay:.4s">Learning Every Day.</div>
+    </div>
+
+    <div class="terminal-box">
+      <div class="terminal-prompt">$ bernardo --status</div>
+      <div class="terminal-output" id="heroTerminal"><span class="terminal-cursor"></span></div>
+    </div>
+
+    <div class="v-actions">
+      <a href="#projects" class="v-btn">VIEW_PROJECTS</a>
+      <a href="#contact" class="v-btn secondary-btn">HIRE_ME</a>
+    </div>
+  </div>
+  <div class="v-coordinates">SYS_VER: 2.0 // BUILD: STABLE // UPTIME: ALWAYS</div>
+</header>
+
+<!-- ABOUT -->
+<section id="about" class="v-section alt-bg">
+  <div class="v-header hidden-scroll">
+    <h2><span class="v-num">01.</span> ABOUT_ME</h2>
+    <p>// WHO AM I?</p>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text hidden-scroll">
+      <p>Comecei a programar aos <strong>13 anos</strong> por pura curiosidade. O interesse surgiu naturalmente através da tecnologia e dos jogos — universos que sempre me fascinaram.</p>
+      <p>Os primeiros passos foram páginas simples em <strong>HTML</strong>, depois a estética veio com o <strong>CSS</strong>, e a lógica tomou forma com o <strong>JavaScript</strong>. Cada linha de código aprendida abria uma nova janela de possibilidades.</p>
+      <p>Com o tempo, passei a construir sistemas mais complexos, interfaces modernas e a explorar o desenvolvimento de <strong>jogos próprios</strong> — combinando programação com criatividade de uma forma que só o game dev proporciona.</p>
+      <p>Hoje continuo evoluindo constantemente, buscando novas tecnologias e criando experiências cada vez melhores. Cada projeto é uma oportunidade de crescimento.</p>
+      <div class="mini-quote">
+        "O código é a linguagem que transforma ideias em realidade. Cada erro é um professor disfarçado."
+      </div>
+    </div>
+    <div class="about-stats hidden-scroll">
+      <div class="stat-item">
+        <div class="stat-num" data-count="3">0</div>
+        <div class="stat-label">ANOS PROGRAMANDO</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="9">0</div>
+        <div class="stat-label">TECNOLOGIAS</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="5">0</div>
+        <div class="stat-label">SISTEMAS GAME DEV</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">VONTADE DE APRENDER</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+<section id="bjj" class="v-section">
+  <div class="v-header hidden-scroll">
+    <h2><span class="v-num">08.</span> MEU SONHO</h2>
+    <p>// ATLETA DE BJJ </p>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="bjj-layout hidden-scroll">
+    <div class="bjj-intro">
+      <p style="color:#666;font-size:.85rem;line-height:2;margin-bottom:25px;">
+        Além do código, a vida é treinada no tatame. O BJJ é parte da rotina — sendo o meu foco o MMA profissional.
+      </p>
+      <div class="mini-quote" style="margin-top:0;">
+        "A mesma disciplina que me faz treinar todo dia é a mesma que me faz sentar e codar até acertar."
+      </div>
+    </div>
+
+    <div class="bjj-stats-grid">
+
+      <div class="bjj-stat-card">
+        <label>COMBAT_TIME</label>
+        <div class="v-value">
+          <span id="contador-dias">0</span>
+          <small>DAYS</small>
         </div>
-    </nav>
+        <div class="v-bar"><div class="v-progress" style="width:85%;"></div></div>
+        <div class="v-tag">TRAINING ACTIVE</div>
+      </div>
 
-    <main>
-        <header class="v-hero">
-            <div class="v-hero-bg"></div>
-            <div class="v-frame">
-                <div class="v-status"><span class="blink">●</span> KURIRIN</div>
-                <h1 class="v-title">BERNARDO <br><span>FERNANDES</span></h1>
-                <div class="v-glitch-box">
-                    <p class="v-typewriter">> DISCIPLINE_IS_NON_NEGOTIABLE_</p>
-                </div>
-                <div class="v-actions">
-                    <a href="#contact" class="v-btn">PARCERIA</a>
-                </div>
-            </div>
-            <div class="v-coordinates">21.7667° S, 43.3500° W // JUIZ DE FORA</div>
-        </header>
+      <div class="bjj-stat-card">
+        <label>TEAM</label>
+        <div class="v-value" style="font-size:1.8rem;">CARLSON<br>GRACIE</div>
+        <div class="v-tag">⚔ GOLD MEDAL no campeonato interno</div>
+      </div>
 
-        <section id="stats" class="v-section">
-            <div class="v-header">
-                <h2><span class="v-num">01.</span> PERFORMACE</h2>
-            </div>
-            <div class="v-grid">
-                <div class="v-card data-point">
-                    <label>COMBAT_TIME</label>
-                    <div class="v-value">385<small>DAYS</small></div>
-                    <div class="v-bar"><div class="v-progress" style="width: 85%;"></div></div>
-                </div>
-                <div class="v-card data-point">
-                    <label>CARLSON GRACIE CAMP. INTERNO</label>
-                    <div class="v-value">TOP_1</div>
-                    <div class="v-tag">MEDALHA DE OURO </div>
-                </div>
-                <div class="v-card data-point">
-                    <label>CARDIO_OUTPUT</label>
-                    <div class="v-value">+ de 13<small>CORRIDAS</small></div>
-                    <div class="v-bar"><div class="v-progress" style="width: 60%;"></div></div>
-                </div>
-            </div>
-        </section>
+      <div class="bjj-stat-card">
+        <label>CARDIO_OUTPUT</label>
+        <div class="v-value">
+          13+
+          <small>RUNS</small>
+        </div>
+        <div class="v-bar"><div class="v-progress" style="width:65%;"></div></div>
+        <div class="v-tag">ENDURANCE</div>
+      </div>
 
-        <section id="log" class="v-section">
-            <div class="v-header">
-                <h2><span class="v-num">02.</span> COMBAT_LOGS</h2>
+      <div class="bjj-stat-card">
+        <label>MODALIDADES</label>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+          <div class="bjj-modality">
+            <span class="bjj-mod-icon">🥋</span>
+            <div>
+              <div style="color:var(--text);font-family:'Oswald',sans-serif;letter-spacing:1px;">BJJ</div>
+              <div style="color:#555;font-size:.7rem;">Brazilian Jiu-Jitsu</div>
             </div>
-            <div class="v-timeline">
-                <div class="v-log-entry">
-                    <span class="v-date">21.05 26</span>
-                    <div class="v-details">
-                        <h3>NEXT_TARGET // LIGA MINEIRA DE JIU-JITSU 4 ETAPA</h3>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="v-log-entry">
-                    <span class="v-date">18.10.25</span>
-                    <div class="v-details">
-                        <h3>OPEN_JF_ESTREIA</h3>
-                        <p>Result: TERCEIRO LUGAR. </p>
-                    </div>
-                </div>
-                <div class="v-log-entry">
-                    <span class="v-date">10.04.25</span>
-                    <div class="v-details">
-                        <h3>O PRIMEIRO DIA</h3>
-                        <p>PRIMEIRO DIA NA CARLSON GRACIE</p>
-                    </div>
-                </div>
-                
-                <div class="v-log-entry">
-                    <span class="v-date">28.03.26</span>
-                    <div class="v-details">
-                        <h3>A PRIMEIRA VITÓRIA</h3>
-                        <p>CAMP. INTERNO CARlSON GRACIE</p>
-                    </div>
-                </div>
+          </div>
+        </div>
+      </div>
 
-                </div>
-            </div>
-        </section>
-        
+      <div class="bjj-stat-card bjj-wide">
+        <label>ROTINA DE TREINO</label>
+        <div class="routine-row">
+          <div class="routine-day"><span>SEG</span><div class="r-active"></div></div>
+          <div class="routine-day"><span>TER</span><div class="r-active"></div></div>
+          <div class="routine-day"><span>QUA</span><div class="r-active"></div></div>
+          <div class="routine-day"><span>QUI</span><div class="r-active"></div></div>
+          <div class="routine-day"><span>SEX</span><div class="r-active"></div></div>
+          <div class="routine-day"><span>SAB {corrida}</span><div class="r-active"></div></div>
+          <div class="routine-day"><span>DOM</span><div class="r-rest"></div></div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:15px;font-size:.65rem;color:#444;">
+          <span><span style="color:var(--primary)">■</span> TREINO</span>
+          <span><span style="color:#222">■</span> DESCANSO</span>
+        </div>
+      </div>
         <section id="gallery" class="v-section">
             <div class="v-header">
                 <h2><span class="v-num">03.</span> VISUAL_RECON</h2>
@@ -114,41 +638,499 @@
             </div>
         </section>
 
-        <section id="contact" class="v-section v-cta">
-            <div class="v-cta-content">
-                <h2><span class="v-num">04.</span> EU, DEUS E UM SONHO</h2>
-                <h3>Sou um praticante de Jiu-Jitsu movido por um uníco sonho ser lutador de MMA ,  ja pensou em contibuir para o meu sonho de me tornar um lutador profissional de MMA que não é algo fácil e nem algo rapido mas estou disposto a me dedicar ao máximo. Encaro cada treino como um passo em direção ao meu objetivo, buscando desenvolver técnica, resistência física e força mental para competir em alto nível.</h3>
-        
-                <h2><span class="v-num">05.</span> CONTATE-ME</h2>
-                <p>Seja o patrocinador que impulsiona a próxima de um futuro lutador de MMA.</p>
-                <div class="v-socials">
-                    <a href="https://instagram.com/fernandes__xr" class="v-link">
-                        <i class="fab fa-instagram"></i> @fernandes__xr
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
-        <script>
-            // Defina a data de início (Ano, Mês, Dia) - Formato: 'YYYY-MM-DD'
-            const dataInicio = new Date('2025-04-10'); 
-            const dataAtual = new Date();
+    </div>
+  </div>
+</section>
 
-            // Calcula a diferença em milissegundos e converte para dias
-            const diferencaTempo = Math.abs(dataAtual - dataInicio);
-            const diasPassados = Math.ceil(diferencaTempo / (1000 * 60 * 60 * 24));
+<!-- DEV LOG TIMELINE -->
+<section id="devlog" class="v-section">
+  <div class="v-header hidden-scroll">
+    <h2><span class="v-num">02.</span> DEV</h2>
+    <p>// COMMIT HISTORY</p>
+    <div class="section-line"></div>
+  </div>
+  <div class="dev-log" style="position:relative;padding-left:0;max-width:700px;">
+    <div class="timeline-line"></div>
+    <div class="log-entry">
+      <div class="log-dot"></div>
+      <div class="log-year">// INIT</div>
+      <h3>Primeiro Contato com Programação</h3>
+      <p>Com 13 anos, a curiosidade sobre como os sites e jogos funcionavam levou ao primeiro contato com HTML. A tela em branco se tornava algo real com cada tag.</p>
+      <div class="log-tags"><span class="tag">HTML</span><span class="tag">CURIOSIDADE</span></div>
+    </div>
+    <div class="log-entry">
+      <div class="log-dot"></div>
+      <div class="log-year">// STYLE_UPDATE</div>
+      <h3>Aprendendo CSS</h3>
+      <p>Descobrir o CSS foi como aprender a pintar. Transformar estruturas sem estilo em interfaces com identidade visual própria abriu um novo mundo criativo.</p>
+      <div class="log-tags"><span class="tag">CSS3</span><span class="tag">DESIGN</span><span class="tag">LAYOUT</span></div>
+    </div>
+    <div class="log-entry">
+      <div class="log-dot"></div>
+      <div class="log-year">// LOGIC_MODULE</div>
+      <h3>JavaScript e a Lógica de Programação</h3>
+      <p>O JavaScript trouxe vida às páginas. Eventos, funções, manipulação do DOM — a programação começou a fazer sentido de verdade.</p>
+      <div class="log-tags"><span class="tag">JAVASCRIPT</span><span class="tag">DOM</span><span class="tag">LÓGICA</span></div>
+    </div>
+    <div class="log-entry">
+      <div class="log-dot"></div>
+      <div class="log-year">// GAME_ENGINE</div>
+      <h3>Primeiros Passos em Game Development</h3>
+      <p>A paixão por jogos se transformou em necessidade de criá-los. Sistemas de combate, mecânicas de RPG e lógica de jogos se tornaram o novo campo de estudo.</p>
+      <div class="log-tags"><span class="tag">GAME DEV</span><span class="tag">SYSTEMS</span><span class="tag">MECÂNICAS</span></div>
+    </div>
+    <div class="log-entry">
+      <div class="log-dot"></div>
+      <div class="log-year">// VERSION_CONTROL</div>
+      <h3>Git e GitHub</h3>
+      <p>Aprender controle de versão foi um marco. Projetos passaram a ser organizados, históricos preservados e o trabalho ganhou estrutura profissional.</p>
+      <div class="log-tags"><span class="tag">GIT</span><span class="tag">GITHUB</span><span class="tag">WORKFLOW</span></div>
+    </div>
+    <div class="log-entry">
+      <div class="log-dot"></div>
+      <div class="log-year">// CURRENT_BUILD</div>
+      <h3>Desenvolvimento Contínuo</h3>
+      <p>Cada dia é uma nova versão. Novos projetos, novas tecnologias, novos desafios. O sistema está em constante atualização.</p>
+      <div class="log-tags"><span class="tag">EVOLUÇÃO</span><span class="tag">SEMPRE</span><span class="tag">∞</span></div>
+    </div>
+  </div>
+</section>
 
-            // Atualiza o HTML com o número de dias reais
-            document.getElementById('contador-dias').innerText = diasPassados;
-        </script>
+<!-- WEB DEV -->
+<section id="webdev" class="v-section alt-bg">
+  <div class="v-header hidden-scroll">
+    <h2><span class="v-num">03.</span> WEB_DEVELOPMENT</h2>
+    <p>// STACK E FERRAMENTAS</p>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid hidden-scroll">
+    <div class="skill-card">
+      <div class="skill-icon">⬡</div>
+      <div class="skill-name">HTML5</div>
+      <div class="skill-desc">Estrutura semântica, acessibilidade e melhores práticas de marcação web moderna.</div>
+      <div class="skill-bar-wrap"><div class="skill-bar" data-width="90"></div></div>
+      <div class="skill-pct">90%</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">◈</div>
+      <div class="skill-name">CSS3</div>
+      <div class="skill-desc">Animações, Flexbox, Grid, variáveis CSS e estilização avançada de interfaces.</div>
+      <div class="skill-bar-wrap"><div class="skill-bar" data-width="85"></div></div>
+      <div class="skill-pct">85%</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">◎</div>
+      <div class="skill-name">JavaScript</div>
+      <div class="skill-desc">Manipulação do DOM, eventos, lógica de programação e interatividade.</div>
+      <div class="skill-bar-wrap"><div class="skill-bar" data-width="75"></div></div>
+      <div class="skill-pct">75%</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">⌥</div>
+      <div class="skill-name">Git & GitHub</div>
+      <div class="skill-desc">Controle de versão, repositórios, branches e fluxo de trabalho profissional.</div>
+      <div class="skill-bar-wrap"><div class="skill-bar" data-width="70"></div></div>
+      <div class="skill-pct">70%</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">⊞</div>
+      <div class="skill-name">Responsive Design</div>
+      <div class="skill-desc">Layouts adaptativos para desktop, tablet e mobile com abordagem mobile-first.</div>
+      <div class="skill-bar-wrap"><div class="skill-bar" data-width="80"></div></div>
+      <div class="skill-pct">80%</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">⬙</div>
+      <div class="skill-name">UI/UX Design</div>
+      <div class="skill-desc">Composição visual, hierarquia tipográfica e experiência do usuário.</div>
+      <div class="skill-bar-wrap"><div class="skill-bar" data-width="65"></div></div>
+      <div class="skill-pct">65%</div>
+    </div>
+  </div>
+</section>
 
+<!-- GAME DEV -->
+<section id="gamedev" class="v-section">
+  <div class="v-header hidden-scroll">
+    <h2><span class="v-num">04.</span> DESENVOLVIMENTO</h2>
+    <p> SISTEMAS E MECÂNICAS</p>
+    <div class="section-line"></div>
+  </div>
+  <div class="game-grid hidden-scroll">
+    <div class="game-card">
+      <div class="game-icon">⚔</div>
+      <h3>COMBAT SYSTEMS</h3>
+      <p>Mecânicas de combate, hitboxes, sistemas de ataque e dano.</p>
+      <div class="game-status active">● DESENVOLVENDO</div>
+    </div>
+    <div class="game-card">
+      <div class="game-icon">🖥</div>
+      <h3>UI SYSTEMS</h3>
+      <p>HUDs, menus e interfaces de jogo funcionais e esteticamente coesas.</p>
+      <div class="game-status active">● DESENVOLVENDO</div>
+    </div>
+    <div class="game-card">
+      <div class="game-icon">📜</div>
+      <h3>RPG MECHANICS</h3>
+      <p>Sistemas de atributos, classes, habilidades e progressão de personagem.</p>
+      <div class="game-status studying">◈ ESTUDANDO</div>
+    </div>
+    <div class="game-card">
+      <div class="game-icon">📈</div>
+      <h3>PROGRESSION SYSTEMS</h3>
+      <p>Level up, XP, desbloqueio de habilidades e curvas de dificuldade.</p>
+      <div class="game-status studying">◈ ESTUDANDO</div>
+    </div>
+    <div class="game-card">
+      <div class="game-icon">🤖</div>
+      <h3>ENEMY AI</h3>
+      <p>Comportamento de inimigos, patrulha, detecção e tomada de decisão criando uma ia para cada um.</p>
+      <div class="game-status studying">◈ ESTUDANDO</div>
+    </div>
+    <div class="game-card">
+      <div class="game-icon">🎒</div>
+      <h3>INVENTORY SYSTEMS</h3>
+      <p>Gerenciamento de itens, equipamentos e sistemas de loot.</p>
+      <div class="game-status active">● DESENVOLVENDO</div>
+    </div>
+    <div class="game-card">
+      <div class="game-icon">〰</div>
+      <h3>WAVE SYSTEMS</h3>
+      <p>Spawning em ondas, escalabilidade de dificuldade e gerenciamento de hordas.</p>
+      <div class="game-status studying">◈ ESTUDANDO</div>
+    </div>
+    <div class="game-card">
+      <div class="game-icon">⚙</div>
+      <h3>GAME SYSTEMS</h3>
+      <p>Arquitetura geral, save/load, game state e gerenciamento de cenas.</p>
+      <div class="game-status active">● DESENVOLVENDO</div>
+    </div>
+  </div>
+</section>
 
-    <footer>
-        <div class="v-footer-info">
-            <span>&copy; 2026_BERNARDO_BJJ_OS</span>
-            
+<!-- PROJECTS -->
+<section id="projects" class="v-section alt-bg">
+  <div class="v-header hidden-scroll">
+    <h2><span class="v-num">05.</span> PROJECTS</h2>
+    <p> O QUE FOI CONSTRUÍDO</p>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid hidden-scroll">
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">01</div>
+        <div class="project-info">
+          <h3>PORTFOLIO de bjj</h3>
+          <div class="type">WEB DEVELOPMENT</div>
         </div>
-    </footer>
+      </div>
+      <div class="project-body">
+        <p>Portfolio pessoal com estética cyberpunk/terminal. Interface completa com animações, scanlines, efeitos de glow e tema dark. Esse site :) </p>
+        <div class="tech-stack">
+          <span class="tech-badge">HTML5</span>
+          <span class="tech-badge">CSS3</span>
+          <span class="tech-badge">JavaScript</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span class="status-badge status-live">● LIVE</span>
+        <button class="project-link"></button>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">02</div>
+        <div class="project-info">
+          <h3>RPG COMBAT DEMO</h3>
+          <div class="type">GAME DEVELOPMENT</div>
+        </div>
+      </div>
+      <div class="project-body">
+        <p>Protótipo de sistema de combate RPG com turnos, atributos, habilidades especiais e inimigos com AI básica.</p>
+        <div class="tech-stack">
+          <span class="tech-badge">JAVASCRIPT</span>
+          <span class="tech-badge">GAME LOGIC</span>
+          <span class="tech-badge">CSS3</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span class="status-badge status-wip">◈ IN PROGRESS</span>
+        <button class="project-link"></button>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">03</div>
+        <div class="project-info">
+          <h3>LANDING PAGE UI</h3>
+          <div class="type">WEB DEVELOPMENT</div>
+        </div>
+      </div>
+      <div class="project-body">
+        <p>Landing page moderna com design responsivo, animações de scroll, hero section impactante e call to actions.</p>
+        <div class="tech-stack">
+          <span class="tech-badge">HTML5</span>
+          <span class="tech-badge">CSS3</span>
+          <span class="tech-badge">RESPONSIVE</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span class="status-badge status-live">● LIVE</span>
+        <button class="project-link"></button>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">04</div>
+        <div class="project-info">
+          <h3>WAVE SHOOTER CONCEPT</h3>
+          <div class="type">GAME DEVELOPMENT</div>
+        </div>
+      </div>
+      <div class="project-body">
+        <p>Conceito de jogo estilo wave shooter com sistema de inimigos em ondas, upgrades e progressão do jogador.</p>
+        <div class="tech-stack">
+          <span class="tech-badge">GAME DESIGN</span>
+          <span class="tech-badge">WAVE SYSTEM</span>
+          <span class="tech-badge">AI</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span class="status-badge status-concept">○ CONCEPT</span>
+        <button class="project-link"></button>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- SKILLS MATRIX -->
+<section id="skills" class="v-section">
+  <div class="v-header hidden-scroll">
+    <h2><span class="v-num">06.</span> SKILLS_MATRIX</h2>
+    <p> MAPA DE HABILIDADES</p>
+    <div class="section-line"></div>
+  </div>
+  <div class="matrix-grid hidden-scroll">
+    <div class="matrix-card">
+      <div class="matrix-title">FRONTEND</div>
+      <div class="matrix-item"><span>HTML5</span><div class="matrix-dots" data-level="5"></div></div>
+      <div class="matrix-item"><span>CSS3</span><div class="matrix-dots" data-level="4"></div></div>
+      <div class="matrix-item"><span>JavaScript</span><div class="matrix-dots" data-level="4"></div></div>
+      <div class="matrix-item"><span>Responsive</span><div class="matrix-dots" data-level="4"></div></div>
+      <div class="matrix-item"><span>Git/GitHub</span><div class="matrix-dots" data-level="3"></div></div>
+    </div>
+    <div class="matrix-card">
+      <div class="matrix-title">GAME DEV</div>
+      <div class="matrix-item"><span>Game Logic</span><div class="matrix-dots" data-level="4"></div></div>
+      <div class="matrix-item"><span>Combat Systems</span><div class="matrix-dots" data-level="3"></div></div>
+      <div class="matrix-item"><span>UI Systems</span><div class="matrix-dots" data-level="4"></div></div>
+      <div class="matrix-item"><span>RPG Mechanics</span><div class="matrix-dots" data-level="3"></div></div>
+      <div class="matrix-item"><span>Enemy AI</span><div class="matrix-dots" data-level="2"></div></div>
+    </div>
+    <div class="matrix-card">
+      <div class="matrix-title">DESIGN</div>
+      <div class="matrix-item"><span>UI Design</span><div class="matrix-dots" data-level="4"></div></div>
+      <div class="matrix-item"><span>Color Theory</span><div class="matrix-dots" data-level="3"></div></div>
+      <div class="matrix-item"><span>Typography</span><div class="matrix-dots" data-level="3"></div></div>
+      <div class="matrix-item"><span>Composição</span><div class="matrix-dots" data-level="3"></div></div>
+      <div class="matrix-item"><span>Animação</span><div class="matrix-dots" data-level="3"></div></div>
+    </div>
+    <div class="matrix-card">
+      <div class="matrix-title">SOFT SKILLS</div>
+      <div class="matrix-item"><span>Problem Solving</span><div class="matrix-dots" data-level="5"></div></div>
+      <div class="matrix-item"><span>Aprendizado</span><div class="matrix-dots" data-level="5"></div></div>
+      <div class="matrix-item"><span>Criatividade</span><div class="matrix-dots" data-level="5"></div></div>
+      <div class="matrix-item"><span>Persistência</span><div class="matrix-dots" data-level="5"></div></div>
+      <div class="matrix-item"><span>Atenção ao Detalhe</span><div class="matrix-dots" data-level="4"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="v-section philosophy-section">
+  <div class="v-header hidden-scroll" style="text-align:center;">
+    <h2><span class="v-num">07.</span> SYSTEM_PHILOSOPHY</h2>
+    <p>// CÓDIGO DO DESENVOLVEDOR</p>
+    <div class="section-line" style="margin:15px auto 0;"></div>
+  </div>
+  <div class="terminal-block hidden-scroll">
+    <div class="terminal-header">
+      <div class="t-dot t-red"></div>
+      <div class="t-dot t-yellow"></div>
+      <div class="t-dot t-green"></div>
+      <span class="t-title">philosophy.sh — B.FERNANDES_OS</span>
+    </div>
+    <div class="terminal-content">
+      <div class="t-line"><span class="prompt">$ </span><span class="cmd">cat philosophy.txt</span></div>
+      <div class="t-line"><span class="output">──────────────────────────────────</span></div>
+      <div class="t-line"><span class="highlight">Programação é construção contínua.</span></div>
+      <div class="t-line"><span class="highlight">Cada erro é uma oportunidade de aprendizado.</span></div>
+      <div class="t-line"><span class="highlight">Cada projeto é uma evolução.</span></div>
+      <div class="t-line"><span class="highlight">A melhoria constante é o sistema.</span></div>
+      <div class="t-line"><span class="output">──────────────────────────────────</span></div>
+      <div class="t-line"><span class="prompt">$ </span><span class="cmd">./run --mode=always</span></div>
+      <div class="t-line"><span class="output">STATUS: <span style="color:var(--green)">RUNNING ∞</span></span></div>
+      <div class="t-line"><span class="prompt">$ </span><span class="terminal-cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- CONTACT -->
+<section id="contact" class="v-section alt-bg">
+  <div class="v-header hidden-scroll">
+    <h2><span class="v-num">09.</span> CONTACT</h2>
+    <p>// BORA CONSTRUIR ALGO</p>
+    <div class="section-line"></div>
+  </div>
+  <div class="contact-grid hidden-scroll">
+    <div>
+      <div class="contact-info">
+        <p>Estou aberto a projetos, colaborações e oportunidades de aprendizado. Se você tem um projeto interessante ou quer trocar uma ideia sobre dev ou games — entra em contato.</p>
+      </div>
+      <div class="contact-links">
+        <a href="https://github.com" target="_blank" class="contact-link">
+          <span class="cl-icon">⌂</span>
+          <div><div class="cl-label">GITHUB</div><div class="cl-value">github.com/bernardofv28</div></div>
+        </a>
+        <a href="#" class="contact-link">
+          <span class="cl-icon">ig</span>
+          <div><div class="cl-label">intagram</div><div class="cl-value">https://www.instagram.com/fernandes__xr</div></div>
+        </a>
+        <a href="#" class="contact-link">
+          <span class="cl-icon">📍</span>
+          <div><div class="cl-label">LOCALIZAÇÃO</div><div class="cl-value">Juiz de Fora, Minas Gerais — Brasil</div></div>
+        </a>
+      </div>
+    </div>
+    <div class="contact-cta">
+      <h3>VAMOS TRABALHAR<br><span style="color:var(--primary)">JUNTOS?</span></h3>
+      <p>Seja um projeto web, um jogo ou apenas uma conversa sobre tecnologia — estou sempre disponível para novas conexões.</p>
+      <div><div class="cl-label">intagram</div><div class="cl-value">https://www.instagram.com/fernandes__xr</div></div>
+        
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">B.FERNANDES<span>_OS</span></div>
+  <div>© 2025 // WEB DEV + GAME DEV</div>
+  <div>BUILD: STABLE // <span style="color:var(--primary)">ALWAYS LEARNING</span></div>
+</footer>
+
+<script>
+/* ── LOADER ── */
+let pct=0;
+const pctEl=document.getElementById('loaderPct');
+const t=setInterval(()=>{pct=Math.min(pct+Math.random()*4,100);pctEl.textContent=Math.floor(pct)+'%';if(pct>=100)clearInterval(t);},60);
+
+/* ── MOBILE NAV ── */
+function toggleMobile(){
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+
+/* ── HERO TERMINAL TYPEWRITER ── */
+const lines=[
+  'WEB_DEVELOPER: active',
+  'GAME_DEVELOPER: learning',
+  'LOCATION: Juiz de Fora, BR',
+  'STATUS: always building...'
+];
+let li=0,ci=0;
+const out=document.getElementById('heroTerminal');
+function typeNext(){
+  if(li>=lines.length){li=0;}
+  if(ci<lines[li].length){
+    out.innerHTML=lines[li].slice(0,ci+1)+'<span class="terminal-cursor"></span>';
+    ci++;setTimeout(typeNext,50);
+  }else{
+    setTimeout(()=>{ci=0;li++;out.innerHTML='<span class="terminal-cursor"></span>';setTimeout(typeNext,400);},2000);
+  }
+}
+setTimeout(typeNext,3600);
+
+/* ── BJJ DAYS COUNTER ── */
+const startDate=new Date('2025-10-04');
+const bjjDays=Math.floor((new Date()-startDate)/(1000*60*60*24));
+const bjjEl=document.getElementById('contador-dias');
+if(bjjEl)bjjEl.textContent=bjjDays;
+
+/* ── PARTICLES ── */
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<60;i++)pts.push({x:Math.random()*9999,y:Math.random()*9999,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5,o:Math.random()*.4+.1});
+function drawParticles(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    ctx.beginPath();ctx.arc(p.x%W,p.y%H,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,42,42,${p.o})`;ctx.fill();
+  });
+  requestAnimationFrame(drawParticles);
+}
+pts.forEach(p=>{p.x=Math.random()*W;p.y=Math.random()*H;});
+drawParticles();
+
+/* ── SCROLL ANIMATIONS ── */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('show-scroll');
+      /* skill bars */
+      e.target.querySelectorAll('.skill-bar').forEach(b=>{b.style.width=b.dataset.width+'%';});
+      /* counters */
+      e.target.querySelectorAll('[data-count]').forEach(el=>{
+        const target=+el.dataset.count;let n=0;
+        const step=setInterval(()=>{n++;el.textContent=n;if(n>=target)clearInterval(step);},100);
+      });
+      /* matrix dots */
+      e.target.querySelectorAll('.matrix-dots').forEach(wrap=>{
+        const lvl=+wrap.dataset.level||0;
+        wrap.innerHTML='';
+        for(let i=1;i<=5;i++){
+          const d=document.createElement('div');
+          d.className='dot'+(i<=lvl?' filled':'');
+          wrap.appendChild(d);
+        }
+      });
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.hidden-scroll,.log-entry').forEach(el=>observer.observe(el));
+
+/* ── SCROLL TOP ── */
+const st=document.getElementById('scrollTop');
+window.addEventListener('scroll',()=>{
+  st.classList.toggle('visible',window.scrollY>400);
+});
+st.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+/* ── MUSIC ── */
+const music=document.getElementById('bgMusic');
+const btn=document.getElementById('musicToggle');
+let playing=false;
+btn.addEventListener('click',()=>{
+  playing=!playing;
+  playing?music.play():music.pause();
+  btn.textContent=playing?'🔇 MUTE':'🔊 BGM';
+});
+
+/* ── NAV ACTIVE ── */
+const sections=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-120)cur=s.id;});
+  document.querySelectorAll('.v-menu a').forEach(a=>{
+    a.style.color=a.getAttribute('href')==='#'+cur?'var(--primary)':'';
+  });
+});
+</script>
 </body>
 </html>
